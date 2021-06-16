@@ -1,46 +1,29 @@
 const root = document.getElementById("root");
 
-function el(type, attrs, children) {
-  let element;
+let el = (type, attrs = {}, children) => {
+  if (!type) throw new Error("unexpected type");
 
   switch (type) {
     case "div":
-      element = new DivElement();
-      break;
+      return new DivElement(type, attrs, children);
     case "span":
-      element = new SpanElement();
-      break;
-    case "input":
-      element = new InputElement();
-      break;
-    case "label":
-      element = new LabelElement();
-      break;
-    case "p":
-      element = new PElement();
-      break;
-    case "ul":
-      element = new ULElement();
-      break;
-    case "li":
-      element = new LIElement();
-      break;
+      return new SpanElement(type, attrs, children);
     case "form":
-      element = new FormElement();
-      break;
+      return new FormElement(type, attrs, children);
     case "br":
-      element = new BrElement();
-      break;
+      return new BrElement(type, attrs, children);
+    case "label":
+      return new LabelElement(type, attrs, children);
+    case "input":
+      return new InputElement(type, attrs, children);
+    case "li":
+      return new LiElement(type, attrs, children);
+    case "ul":
+      return new UlElement(type, attrs, children);
     default:
-      throw new Error("Unexpexted type");
+      throw new Error("unexpected type");
   }
-
-  for (let attr in attrs) {
-    element.element.setAttribute(attr, attrs[attr]);
-  }
-
-  return element.draw(children);
-}
+};
 
 const tree = el("form", { action: "/some_action" }, [
   el("label", { for: "name" }, "First name:"),
@@ -51,7 +34,7 @@ const tree = el("form", { action: "/some_action" }, [
     null
   ),
   el("br", {}, null),
-  el("label", { fors: "last_name" }, "Last name:"),
+  el("label", { for: "last_name" }, "Last name:"),
   el("br", {}, null),
   el(
     "input",
@@ -67,4 +50,4 @@ const tree = el("form", { action: "/some_action" }, [
   el("input", { type: "submit", value: "Submit" }, null),
 ]);
 
-root.appendChild(tree);
+root.appendChild(tree.draw());

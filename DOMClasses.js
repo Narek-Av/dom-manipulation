@@ -1,77 +1,87 @@
 class DOMElement {
-  constructor(element) {
-    this.element = element;
+  constructor(type, attrs, ...children) {
+    this.type = type;
+    this.attrs = attrs;
+    this.children = Array.isArray(...children)
+      ? Array.from(...children)
+      : children;
   }
 
-  draw(innerHTML) {
-    if (!innerHTML) return this.element;
-
-    if (typeof innerHTML === "string") {
-      this.element.innerText = innerHTML;
-    } else {
-      if (Array.isArray(innerHTML)) {
-        for (const doc of innerHTML) {
-          this.element.appendChild(doc);
-        }
-      } else {
-        this.element.appendChild(innerHTML);
-      }
+  setAttributes(el) {
+    for (let [key, val] of Object.entries(this.attrs)) {
+      el.setAttribute(key, val);
     }
+  }
 
-    return this.element;
+  draw() {
+    const element = document.createElement(this.type);
+
+    this.setAttributes(element);
+
+    if (!this.children[0]) return element;
+
+    this.children.forEach(child => {
+      let childrenElement =
+        child instanceof DOMElement
+          ? child.draw()
+          : document.createTextNode(child);
+      element.appendChild(childrenElement);
+    });
+
+    return element;
   }
 }
 
 class DivElement extends DOMElement {
-  constructor() {
-    super(document.createElement("DIV"));
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
   }
 }
 
 class SpanElement extends DOMElement {
-  constructor() {
-    super(document.createElement("SPAN"));
-  }
-}
-
-class InputElement extends DOMElement {
-  constructor() {
-    super(document.createElement("INPUT"));
-  }
-}
-
-class LabelElement extends DOMElement {
-  constructor() {
-    super(document.createElement("LABEL"));
-  }
-}
-
-class PElement extends DOMElement {
-  constructor() {
-    super(document.createElement("DIV"));
-  }
-}
-
-class ULElement extends DOMElement {
-  constructor() {
-    super(document.createElement("UL"));
-  }
-}
-
-class LIElement extends DOMElement {
-  constructor() {
-    super(document.createElement("LI"));
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
   }
 }
 
 class FormElement extends DOMElement {
-  constructor() {
-    super(document.createElement("FORM"));
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
+  }
+}
+
+class InputElement extends DOMElement {
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
+  }
+}
+
+class LabelElement extends DOMElement {
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
+  }
+}
+
+class PElement extends DOMElement {
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
   }
 }
 
 class BrElement extends DOMElement {
-  constructor() {
-    super(document.createElement("BR"));
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
+  }
+}
+
+class LiElement extends DOMElement {
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
+  }
+}
+
+class UlElement extends DOMElement {
+  constructor(type, attrs, children) {
+    super(type, attrs, children);
   }
 }
